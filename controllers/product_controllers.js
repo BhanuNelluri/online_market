@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Products from "../models/products.js";
 
 export const getAllProducts = async(req,res)=>{
@@ -17,5 +18,16 @@ export const createProduct = async(req,res)=>{
         res.status(201).json(newProduct);
     } catch (error) {
         res.status(409).json({ message: error.message })
+    }
+}
+
+export const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send('No task with that id');
+    try {
+        await Products.findByIdAndDelete(id);
+        res.json("Deleted");
+    } catch (error) {
+        res.status(409).json({ message: error.message });
     }
 }
